@@ -1,6 +1,9 @@
 
-
+import logging
 from trade_enum import TradeAction
+
+
+logger = logging.getLogger(__name__)
 
 
 class SecurityObject:
@@ -25,6 +28,23 @@ class SecurityObject:
         """
         # later add methods to check for data validation...
         return self.portfolio_amount / self.unit_price
+
+    def determine_trade_action(self):
+        """
+        Determine whether to buy or sell shares based on the current allocation and target allocation.
+
+        :return: TradeAction Enum (BUY or SELL)
+        """
+        if self.target_variance > 0:
+            return TradeAction.SELL
+        elif self.target_variance < 0:
+            return TradeAction.BUY
+        elif self.target_variance == 0:
+            return TradeAction.NO_ACTION_REQUIRED
+
+        else:
+            logger.error(f"Something went wrong. Invalid state for security: {self.security}")
+            return None
 
     def trade_shares(self, action):
         if action == TradeAction.SELL:
