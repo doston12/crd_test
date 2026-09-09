@@ -1,27 +1,37 @@
 
-from dataclasses import dataclass
 
-@dataclass
+from trade_enum import TradeAction
+
+
 class SecurityObject:
-    security: str
-    target: float
-    current: float
-    target_variance: float
-    unit_price: float
 
-    def stock_value_in_usd(self):
-        pass
+    def __init__(self, security, target, current, target_variance, unit_price, total_portfolio_amount):
+        # later, add method to check for data validation for each field.
 
+        self.security = security
+        self.target = target
+        self.current = current
+        self.target_variance = target_variance
+        self.unit_price = unit_price
 
-    def calculate_investment(self, total_amount):
+        # later add methods to check for data validation...
+        self.portfolio_amount = total_portfolio_amount * self.current / 100
+
+    def calculate_shares_available(self):
         """
-        Calculate the total investment for this security.
+        Calculate the number of shares available for this security, considering the portfolio amount for this security
 
-        :param total_amount: Total investment amount
-        :return: Total investment for this security
+        :return: Number of shares available
         """
-        investment_amount_usd = total_amount * self.current_allocation / 100
-        investment_amount_stocks = investment_amount_usd / self.unit_price
-        return investment_amount_usd, investment_amount_stocks
+        # later add methods to check for data validation...
+        return self.portfolio_amount / self.unit_price
+
+    def trade_shares(self, action):
+        if action == TradeAction.SELL:
+            pass
+
+        if action == TradeAction.BUY:
+            pass
+
 
 
