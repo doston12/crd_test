@@ -20,7 +20,7 @@ class SecurityObject:
         # later add methods to check for data validation...
         self.portfolio_amount = total_portfolio_amount * self.current / 100
 
-    def calculate_shares_available(self):
+    def get_available_shares(self):
         """
         Calculate the number of shares available for this security, considering the portfolio amount for this security
 
@@ -47,11 +47,31 @@ class SecurityObject:
             return None
 
     def trade_shares(self, action):
-        if action == TradeAction.SELL:
-            pass
+        if action == TradeAction.SELL or action == TradeAction.BUY:
+            logger.info(f"Trading {abs(self.target_variance)} shares of security: {self.security}")
+            total_trade_amount = self.portfolio_amount * abs(self.target_variance) / 100
+            shares_to_trade = total_trade_amount / self.unit_price
+            self.reset_target_variance(0)
+            return total_trade_amount, shares_to_trade
 
-        if action == TradeAction.BUY:
-            pass
+        elif action == TradeAction.NO_ACTION_REQUIRED:
+            logger.info(f"No action required for security: {self.security}")
+            return 0, 0
 
+        else:
+            logger.error(f"Invalid trade action for security: {self.security}, got action: {action}")
+            return None
 
+    def reset_target_variance(self, new_target_variance):
+        """
+        Reset the target variance for this security.
 
+        :param new_target_variance: New target variance value
+        """
+        logger.info(f"Reset target variance for security: {self.security} to {new_target_variance}")
+        self.target_variance = new_target_variance
+
+    def __repr__(self):
+        return (f"SecurityObject(security={self.security}, target={self.target}, "
+                f"current={self.current}, target_variance={self.target_variance}, "
+                f"unit_price={self.unit_price}, portfolio_amount={self.portfolio_amount})")
