@@ -2,7 +2,10 @@
 import logging
 from trade_enum import TradeAction
 
-
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s:%(name)s:%(message)s",
+)
 logger = logging.getLogger(__name__)
 
 
@@ -16,6 +19,7 @@ class SecurityObject:
         self.current = current
         self.target_variance = target_variance
         self.unit_price = unit_price
+        self.total_portfolio_amount = total_portfolio_amount
 
         # later add methods to check for data validation...
         self.portfolio_amount = total_portfolio_amount * self.current / 100
@@ -48,15 +52,26 @@ class SecurityObject:
 
     def trade_shares(self, action):
         if action == TradeAction.SELL or action == TradeAction.BUY:
-            logger.info(f"Trading {abs(self.target_variance)} shares of security: {self.security}")
-            total_trade_amount = self.portfolio_amount * abs(self.target_variance) / 100
-            shares_to_trade = total_trade_amount / self.unit_price
-            self.reset_target_variance(0)
-            return total_trade_amount, shares_to_trade
+            total_trade_amount = self.total_portfolio_amount * abs(self.target_variance) / 100
+            shares_traded = total_trade_amount / self.unit_price
+            logger.info(
+                f"Calculated {action.value} of {shares_traded} shares of "
+                f"{self.security} for ${total_trade_amount}"
+            )
+
+            if action == TradeAction.SELL:
+                self.portfolio_amount -= total_trade_amount
+            elif action == TradeAction.BUY:
+                self.portfolio_amount += total_trade_amount
+
+            self.current = self.portfolio_amount / self.total_portfolio_amount * 100
+            self.reset_target_variance(self.current - self.target)
+
+            return total_trade_amount, shares_traded, self.portfolio_amount
 
         elif action == TradeAction.NO_ACTION_REQUIRED:
             logger.info(f"No action required for security: {self.security}")
-            return 0, 0
+            return 0, 0, self.portfolio_amount
 
         else:
             logger.error(f"Invalid trade action for security: {self.security}, got action: {action}")
