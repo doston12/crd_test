@@ -1,0 +1,5 @@
+security,target,current,target_variance,unit_price
+HUGE_TARGET,1e309,20,0,150
+HUGE_CURRENT,20,1e309,0,90
+HUGE_VARIANCE,20,20,1e309,220
+HUGE_PRICE,20,20,0,1e309

@@ -1,0 +1,6 @@
+security,target,current,target_variance,unit_price
+IBM,20,40,20,150
+MSFT,20,20,0,90
+ORCL,20,0,-20,110000
+AAPL,20,20,0,450
+HD,20,20,0,300

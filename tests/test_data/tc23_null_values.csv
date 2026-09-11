@@ -1,0 +1,6 @@
+security,target,current,target_variance,unit_price
+null,20,20,0,150
+MSFT,null,20,0,90
+ORCL,20,null,0,220
+AAPL,20,20,null,450
+HD,20,20,0,null

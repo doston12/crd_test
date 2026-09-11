@@ -1,0 +1,5 @@
+security,target,current,target_variance,unit_price
+IBM,not-a-number,20,0,150
+MSFT,20,not-a-number,0,90
+ORCL,20,20,not-a-number,220
+AAPL,20,20,0,not-a-number
