@@ -69,7 +69,7 @@ class Portfolio:
             if action == TradeAction.SELL:
                 self.top_up_cash(total_trade_amount)
             elif action == TradeAction.BUY:
-                # Assumption: if we have to buy first, account goves negative and later when we sell,
+                # Assumption: if we have to buy first, account goes negative and later when we sell,
                 # we will have enough cash to buy. This is a simplification, avoided over-engineering..
                 self.withdraw_cash(total_trade_amount)
 
