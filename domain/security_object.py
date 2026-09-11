@@ -1,5 +1,7 @@
 
 import logging
+import math
+
 from domain.trade_enum import TradeAction
 
 logging.basicConfig(
@@ -12,8 +14,6 @@ logger = logging.getLogger(__name__)
 class SecurityObject:
 
     def __init__(self, security, target, current, target_variance, unit_price, total_portfolio_amount):
-        # later, add method to check for data validation for each field.
-
         self.security = security
         self.target = target
         self.current = current
@@ -21,8 +21,39 @@ class SecurityObject:
         self.unit_price = unit_price
         self.total_portfolio_amount = total_portfolio_amount
 
-        # later add methods to check for data validation...
+        self.validate_input()
         self.portfolio_amount = total_portfolio_amount * self.current / 100
+
+    def validate_input(self):
+        """Validate the security fields before calculating portfolio values."""
+        if not isinstance(self.security, str) or not self.security.strip():
+            raise ValueError("Security name must not be empty")
+
+        numeric_fields = {
+            "target": self.target,
+            "current": self.current,
+            "target_variance": self.target_variance,
+            "unit_price": self.unit_price,
+            "total_portfolio_amount": self.total_portfolio_amount,
+        }
+
+        for field_name, value in numeric_fields.items():
+            if isinstance(value, bool) or not isinstance(value, (int, float)):
+                raise ValueError(f"{field_name} must be a number")
+            if not math.isfinite(value):
+                raise ValueError(f"{field_name} must be a finite number")
+
+        if not 0 <= self.target <= 100:
+            raise ValueError("Target percentage must be between 0 and 100")
+        if not 0 <= self.current <= 100:
+            raise ValueError("Current percentage must be between 0 and 100")
+        if not -100 <= self.target_variance <= 100:
+            raise ValueError("Target variance must be between -100 and 100")
+        if self.unit_price <= 0:
+            raise ValueError("Unit price must be greater than zero")
+        if self.total_portfolio_amount <= 0:
+            raise ValueError("Total portfolio amount must be greater than zero")
+
 
     def get_available_shares(self):
         """
@@ -30,7 +61,6 @@ class SecurityObject:
 
         :return: Number of shares available
         """
-        # later add methods to check for data validation...
         return self.portfolio_amount / self.unit_price
 
     def determine_trade_action(self):
