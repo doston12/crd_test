@@ -1,6 +1,6 @@
 
 import logging
-from trade_enum import TradeAction
+from domain.trade_enum import TradeAction
 
 logging.basicConfig(
     level=logging.INFO,

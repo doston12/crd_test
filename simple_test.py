@@ -1,8 +1,8 @@
 
 import logging
 
-from portfolio import Portfolio
-from security_object import SecurityObject
+from domain.portfolio import Portfolio
+from domain.security_object import SecurityObject
 
 logging.basicConfig(
     level=logging.INFO,
